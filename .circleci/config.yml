@@ -2,6 +2,23 @@ version: 2.1
 orbs:
   node: circleci/node@1.1  
 jobs:
+  one: #This is our first job.
+    docker: # it uses the docker executor
+      - image: circleci/ruby:2.4.1 #specifically, a docker image with ruby 2.4.1
+        auth:
+          username: mydockerhub-user
+          password: $DOCKER_PASSWORD # context / project UI env-var reference
+    #Steps are a list of commands to run inside the docker container above.
+    steps:
+      - checkout: #this pulls code down from GitHub
+      - run: echo "A first Hello" # this prints "A first Hello" to stdout.
+      - run: sleep 25 #a command telling the job to "sleep"for 25 seconds.
+  two:
+    docker: # it runs inside a docker image, the same as above.
+    - image: circleci/ruby:2.4.1
+      auth:
+        username: mydockerhub-user
+        password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
   build:
     executor:
       name: node/default
@@ -9,6 +26,6 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
-        steps:
-          -  run: npm install
-      - run: npm run test
+workflows:
+  say-hello-workflow:
+      
